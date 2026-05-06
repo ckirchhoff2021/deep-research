@@ -505,7 +505,7 @@ def display_message(msg: dict):
 
 def main():
     st.set_page_config(
-        page_title="Boc-BA Agent",
+        page_title="Deep Research Agent",
         page_icon="🗄️",
         layout="wide",
     )
