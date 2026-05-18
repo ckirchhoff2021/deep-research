@@ -18,8 +18,6 @@ from rich.text import Text
 from rich.style import Style
 import deepagents.middleware.filesystem as fs_middleware
 
-import deepagents.middleware.filesystem as fs_middleware
-
 
 try:
     from langsmith import Client
@@ -298,4 +296,4 @@ Examples:
 
 if __name__ == "__main__":
     main()
-
+    
