@@ -148,7 +148,7 @@ def create_deep_research_agent():
     # Create the Deep Agent with all parameters
     agent = create_deep_agent(
         model=model,
-        memory=["./AGENTS.md"],
+        memory=["./memory/AGENTS.md"],
         skills=[
             "./skills/"
         ],
