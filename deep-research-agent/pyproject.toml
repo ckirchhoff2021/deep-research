@@ -19,11 +19,12 @@ dependencies = [
     "matplotlib>=1.30.0",
     "httpx",
     "markdownify",
-    "arxiv>=3.0.0"
+    "arxiv>=3.0.0",
+    "volcengine-python-sdk[ark]>=5.0.27",
 ]
 
 [tool.setuptools.packages.find]
-exclude = ["skills*", "sessions*"]
+exclude = ["skills*", "sessions*", "tmp*", "outputs*"]
 
 [build-system]
 requires = ["setuptools>=61.0"]
