@@ -18,8 +18,6 @@ from rich.text import Text
 from rich.style import Style
 import deepagents.middleware.filesystem as fs_middleware
 
-import deepagents.middleware.filesystem as fs_middleware
-
 
 try:
     from langsmith import Client
@@ -148,7 +146,7 @@ def create_deep_research_agent():
     # Create the Deep Agent with all parameters
     agent = create_deep_agent(
         model=model,
-        memory=["./AGENTS.md"],
+        memory=["./memory/AGENTS.md"],
         skills=[
             "./skills/"
         ],
@@ -298,4 +296,4 @@ Examples:
 
 if __name__ == "__main__":
     main()
-
+    

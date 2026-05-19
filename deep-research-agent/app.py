@@ -338,7 +338,7 @@ def render_table(table_config: dict):
 
 
 def render_file(file_config: dict):
-    """Render file as a download card in the chat."""
+    """Render file as a preview or download card in the chat."""
     file_path = file_config.get("file_path", "")
     display_name = file_config.get("display_name", "download")
     
@@ -364,6 +364,7 @@ def render_file(file_config: dict):
         ".jpeg": "🖼️",
         ".gif": "🖼️",
         ".webp": "🖼️",
+        ".bmp": "🖼️",
         ".doc": "📝",
         ".docx": "📝",
         ".xls": "📊",
@@ -377,7 +378,21 @@ def render_file(file_config: dict):
         ".txt": "📄",
         ".py": "📄",
         ".json": "📄",
+        ".mp4": "🎬",
+        ".webm": "🎬",
+        ".avi": "🎬",
+        ".mov": "🎬",
+        ".mkv": "🎬",
+        ".flv": "🎬",
+        ".wmv": "🎬",
     }.get(file_extension, "📎")
+    
+    # Check if file is an image or video for preview
+    image_extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
+    video_extensions = {".mp4", ".webm", ".avi", ".mov", ".mkv", ".flv", ".wmv"}
+    
+    is_image = file_extension in image_extensions
+    is_video = file_extension in video_extensions
     
     try:
         with open(file_path_obj, "rb") as f:
@@ -385,6 +400,12 @@ def render_file(file_config: dict):
 
         mime_type, _ = mimetypes.guess_type(str(file_path_obj))
         mime_type = mime_type or "application/octet-stream"
+        
+        # Render preview if it's image or video
+        if is_image:
+            st.image(file_data, caption=display_name, use_container_width=True)
+        elif is_video:
+            st.video(file_data, format=mime_type)
         
         st.markdown("""
         <style>
@@ -1022,4 +1043,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
