@@ -1,0 +1,9 @@
+deep_research_agent.egg-info/
+*.egg-info/
+*pycache*
+research_*
+sessions/
+.env
+.venv/
+__pycache__/
+*outputs/
