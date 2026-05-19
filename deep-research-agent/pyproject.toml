@@ -20,6 +20,7 @@ dependencies = [
     "httpx",
     "markdownify",
     "arxiv>=3.0.0",
+    "openai>=2.29.0",
     "volcengine-python-sdk[ark]>=5.0.27",
 ]
 
