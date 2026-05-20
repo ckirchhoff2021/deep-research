@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "帮我生成一个自然风景视频，内容是男人在稻田玩了会儿后，又跑去山上玩了，拥抱大自然，参考图片是[YOUR_SKILLS_DIR]/video-generator/resources/ghibli_summer_rice_field_4k.png和[YOUR_SKILLS_DIR]/video-generator/resources/ghibli_converted_portrait.jpg，时长10秒，16:9比例",
+      "prompt": "帮我生成一个自然风景视频，内容是男人在稻田玩了会儿后，又跑去山上玩了，拥抱大自然，参考图片是[YOUR_SKILLS_DIR]/video-generator/respurces/ghibli_summer_rice_field_4k.png和/home/chenxiang.101/workspace/tmp/ghibli_converted_portrait.jpg，时长10秒，16:9比例",
       "expected_output": "生成符合描述的自然风景视频，返回进程ID、日志路径，完成后返回视频文件路径和预览链接",
       "files": []
     },
