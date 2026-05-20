@@ -914,8 +914,8 @@ def main():
         ### 💡 Tips
         - Ask any question that interests you
         - Examples:
-          - "Tell me something about the AuroraEdge-V-2B?"
-          - "Who are you ?"
+          - "Generate an image in Studio Ghibli style."
+          - "Tell a story about a cat."
         """)
         st.markdown("""
         ### ⚡ Features
