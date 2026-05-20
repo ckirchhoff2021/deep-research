@@ -385,14 +385,24 @@ def render_file(file_config: dict):
         ".mkv": "🎬",
         ".flv": "🎬",
         ".wmv": "🎬",
+        ".mp3": "🎵",
+        ".wav": "🎵",
+        ".flac": "🎵",
+        ".aac": "🎵",
+        ".ogg": "🎵",
+        ".m4a": "🎵",
+        ".wma": "🎵",
+        ".aiff": "🎵",
     }.get(file_extension, "📎")
     
-    # Check if file is an image or video for preview
+    # Check if file is an image, video or audio for preview
     image_extensions = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
     video_extensions = {".mp4", ".webm", ".avi", ".mov", ".mkv", ".flv", ".wmv"}
+    audio_extensions = {".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a", ".wma", ".aiff"}
     
     is_image = file_extension in image_extensions
     is_video = file_extension in video_extensions
+    is_audio = file_extension in audio_extensions
     
     try:
         with open(file_path_obj, "rb") as f:
@@ -401,11 +411,13 @@ def render_file(file_config: dict):
         mime_type, _ = mimetypes.guess_type(str(file_path_obj))
         mime_type = mime_type or "application/octet-stream"
         
-        # Render preview if it's image or video
+        # Render preview if it's image, video or audio
         if is_image:
             st.image(file_data, caption=display_name, use_container_width=True)
         elif is_video:
             st.video(file_data, format=mime_type)
+        elif is_audio:
+            st.audio(file_data, format=mime_type)
         
         st.markdown("""
         <style>
@@ -1039,7 +1051,6 @@ def main():
         if "session_title" in st.session_state:
             session["title"] = st.session_state.session_title
         save_session(session)
-
 
 if __name__ == "__main__":
     main()
