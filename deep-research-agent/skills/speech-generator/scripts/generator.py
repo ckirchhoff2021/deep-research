@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--prompt_wav", default="./asset/zero_shot_prompt.wav", help="Reference audio path")
     parser.add_argument("--instruct_prompt", default="", help="Instruction prompt for instruct_gen")
     parser.add_argument("--background", action="store_true", default=False, help="Run generation in background (no timeout, suitable for long text)")
-    parser.add_argument("--output_file", default="output.wav", help="Custom output file path (only used in background mode)")
+    parser.add_argument("--output_file", default="output.wav", help="Custom output file path (needed in background mode and optional for non-background mode)")
     
     args = parser.parse_args()
     
@@ -45,7 +45,8 @@ def main():
         VENV_PYTHON, "-m", "inference.generator",
         "--task_type", args.task_type,
         "--tts_text", tts_text,
-        "--prompt_wav", args.prompt_wav
+        "--prompt_wav", args.prompt_wav,
+        "--save_file", args.output_file
     ]
     if args.task_type == "instruct_gen" and args.instruct_prompt:
         cmd.extend(["--instruct_prompt", args.instruct_prompt])
@@ -64,17 +65,8 @@ def main():
             print(f"Error: Generation failed\nStderr: {result.stderr}", file=sys.stderr)
             sys.exit(1)
         
-        # Extract output file path from stdout
-        output_file = None
-        for line in result.stdout.split("\n"):
-            if "save audio to" in line:
-                output_file = line.split("save audio to ")[-1].strip()
-                break
-        
-        if not output_file:
-            output_file = "output.wav"
-        
-        print(output_file)
+        print(result.stdout)
+    
     
 if __name__ == "__main__":
     main()
