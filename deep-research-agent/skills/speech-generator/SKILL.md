@@ -28,7 +28,7 @@ description: 专业语音生成技能，支持语音克隆、跨语言合成、�
 | prompt_wav | string | 否 | 参考音频路径，默认：./asset/zero_shot_prompt.wav |
 | instruct_prompt | string | 否 | 生成指令，仅指令遵循生成时必填，例如"用粤语生成"、"用温柔的女声生成" |
 | background | boolean | 否 | 是否后台执行（默认为false），长文本生成时开启可避免超时问题，生成完成后自动保存到输出路径 |
-| output_file | string | 否 | 自定义输出文件路径，仅在background模式下使用 |
+| output_file | string | 否 | 自定义输出文件路径，在background模式下必填，非background模式可选 |
 
 ## 输出格式
 ```
@@ -49,6 +49,7 @@ description: 专业语音生成技能，支持语音克隆、跨语言合成、�
   --task_type voice_clone \
   --tts_text "欢迎来到人工智能世界" \
   --prompt_wav "/user/upload/reference.wav"
+  --output_file "welcome.wav"
 ```
 ### 示例2：跨语言合成
 用户请求："用四川话念一段绕口令：八百标兵奔北坡"
