@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--prompt_wav", default="./asset/zero_shot_prompt.wav", help="Reference audio path")
     parser.add_argument("--instruct_prompt", default="", help="Instruction prompt for instruct_gen")
     parser.add_argument("--background", action="store_true", default=False, help="Run generation in background (no timeout, suitable for long text)")
-    parser.add_argument("--output_file", default="output.wav", help="Custom output file path (needed in background mode and optional for non-background mode)")
+    parser.add_argument("--output_file", default="outputs/output.wav", help="Custom output file path (needed in background mode and optional for non-background mode)")
     
     args = parser.parse_args()
     
