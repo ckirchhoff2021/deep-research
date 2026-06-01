@@ -1,0 +1,17 @@
+{
+  "skill_name": "visual-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "分析这张图像：[YOUR_SKILLS_DIR]/visual-analysis/assets/offset_236.png，详细描述一下内容",
+      "expected_output": "这是一张时序分析图表。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "分析这张图表offset_236.png的走势，开启thinking模式",
+      "expected_output": "包含完整推理过程的分析结果",
+      "files": []
+    }
+  ]
+}
