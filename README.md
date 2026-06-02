@@ -1,4 +1,4 @@
-# Deep Research 多模态AI Agent技能库
+# Deep Research 多模态理解和生成 AI Agent
 
 ## 🎯 项目简介
 Deep Research 是面向AIGC场景的多模态AI Agent技能集合仓库，提供开箱即用的多模态能力封装，支持快速构建图像/视频/语音/视觉分析类AI应用，所有技能均可独立调用也可组合使用，完美适配Hermes Agent框架和自定义Agent工作流。
