@@ -4,7 +4,7 @@
 Deep Research 是面向AIGC场景的多模态AI Agent技能集合仓库，提供开箱即用的多模态能力封装，支持快速构建图像/视频/语音/视觉分析类AI应用，所有技能均可独立调用也可组合使用，完美适配Hermes Agent框架和自定义Agent工作流。
 
 ## ✨ 核心功能
-目前已包含6大核心技能，覆盖全链路AIGC能力：
+目前已包含7大核心技能，覆盖全链路AIGC能力：
 
 | 技能名称 | 功能描述 |
 |---------|----------|
@@ -13,6 +13,7 @@ Deep Research 是面向AIGC场景的多模态AI Agent技能集合仓库，提供
 | 🎤 **speech-generator** | 智能语音合成，支持20+种中文/英文音色、多情感合成、长文本批量生成、流式输出 |
 | 🎧 **speech-analyze** | 语音分析与处理，支持语音转文本、情绪识别、声纹比对、语种检测 |
 | 👁️ **visual-analysis** | 图像视觉分析，支持OCR识别、目标检测、内容分类、图像相似度比对、质量评估 |
+| 🔍 **semantic-retrieval** | 语义相似度计算与召回，支持文本相似度计算、语义匹配、相似文档召回、top-k结果返回 |
 | 🛠️ **skill-creator** | 技能创建与管理工具，快速生成符合规范的新技能模板、自动生成评估用例、打包发布 |
 
 ## 📁 目录结构
@@ -25,6 +26,7 @@ deep-research/
 │   │   ├── speech-generator/       # 语音生成技能
 │   │   ├── speech-analyze/         # 语音分析技能
 │   │   ├── visual-analysis/        # 视觉分析技能
+│   │   ├── semantic-retrieval/     # 语义检索技能
 │   │   └── skill-creator/          # 技能创建工具
 │   ├── app.py                      # Agent主入口
 │   ├── .env.example                # 环境变量配置模板
