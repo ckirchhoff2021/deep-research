@@ -2,6 +2,7 @@ import json
 import os
 from typing import Optional, Literal
 from langchain_core.tools import tool
+from .openai_tools import openai_chat_completion, openai_response
 
 
 ChartType = Literal["bar", "line", "pie", "scatter", "area"]
@@ -143,5 +144,7 @@ def get_custom_tools():
         prepare_chart_data,
         prepare_table_data,
         send_file,
+        openai_chat_completion,
+        openai_response
     ]
 
