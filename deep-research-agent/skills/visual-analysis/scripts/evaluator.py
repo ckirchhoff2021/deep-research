@@ -10,7 +10,7 @@ load_dotenv()
 
 # 获取当前文件目录，这样我们能找到 infer.py
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-INFER_SCRIPT = os.path.join(CURRENT_DIR, 'analyze.py')
+INFER_SCRIPT = os.path.join(CURRENT_DIR, 'infer.py')
 
 def inference_by_subprocess(prompt, image_file):
     '''
