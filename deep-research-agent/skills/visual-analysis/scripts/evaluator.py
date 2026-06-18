@@ -5,25 +5,32 @@ from dotenv import load_dotenv
 import argparse
 import sys
 
-# 加载 .env 文件
 load_dotenv()
 
-# 获取当前文件目录，这样我们能找到 infer.py
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-INFER_SCRIPT = os.path.join(CURRENT_DIR, 'infer.py')
+INFER_SCRIPT = os.path.join(CURRENT_DIR, 'analyze.py')
 
-def inference_by_subprocess(prompt, image_file):
+def inference_by_subprocess(args, img_path):
     '''
     使用 subprocess 调用 infer.py 进行推理
     '''
     cmd = [
         sys.executable,
         INFER_SCRIPT,
-        "--prompt", prompt,
-        "--image_file", image_file,
-        "--output-json"
+        "--base_url", args.base_url,
+        "--api_key", args.api_key,
+        "--model_name", args.model_name,
+        "--system_prompt", args.system_prompt,
+        "--user_prompt", args.user_prompt,
+        "--image_file", img_path,
+        "--temperature", str(args.temperature),
+        "--api-type", args.api_type,
+        "--reasoner", "medium",
+        "--output-json",
     ]
-    
+    if args.thinking:
+        cmd.append("--thinking")
+
     try:
         result = subprocess.run(
             cmd,
@@ -56,15 +63,15 @@ def inference_by_subprocess(prompt, image_file):
     return None
 
 
-def inference(prompt, test_file):
+def inference(args):
     '''
-    test_file: json file path to evaluate, format is {img_path: label}
+    args: argparse.Namespace object
     '''
     outputs = list()
-    datas = json.load(open(test_file, 'r'))
+    datas = json.load(open(args.test_file, 'r'))
     for img_path in datas.keys():
         print(f"\nProcessing: {img_path}")
-        preds = inference_by_subprocess(prompt, img_path)
+        preds = inference_by_subprocess(args, img_path)
         if isinstance(preds, tuple):
             pred, reason = preds
         else:
@@ -76,7 +83,7 @@ def inference(prompt, test_file):
             pred = ""
             
         import re
-        match = re.search(r'<result>(.*?)</result>', pred, re.DOTALL)
+        match = re.search(args.result_pattern, pred, re.DOTALL)
         result = match.group(1).strip() if match else pred
         outputs.append({
             'img_path': img_path,
@@ -127,28 +134,42 @@ def calculate_metrics(outputs):
     return results
 
 
-def save_outputs(outputs):
+def save_outputs(outputs, file_name):
     import time
     timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    output_file = f"evals-{timestamp}.json"
+    if len(file_name) == 0:
+        output_file = f"cls-evals-{timestamp}.json"
+    else:
+        output_file = file_name
     with open(output_file, 'w') as f:
         json.dump(outputs, f, indent=2, ensure_ascii=False)
     print(f'Successfully save outputs to {output_file}')
     
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="chart analysis")
-    parser.add_argument("--prompt_file", type=str, help="prompt file path to evaluate")
+    parser = argparse.ArgumentParser(description="visual image classifier evaluator")
+    parser.add_argument("--base_url", type=str, default=os.getenv('SPEECH_BASE_URL'), help="base url for openai api")
+    parser.add_argument("--api_key", type=str, default=os.getenv('SPEECH_API_KEY'), help="api key for openai api")
+    parser.add_argument("--model_name", type=str, default=os.getenv('SPEECH_MODEL'), help="model name for openai api")
+    
+    parser.add_argument("--user_prompt", type=str, default="Please describe the picture.", help="input prompt or prompt file path for inference")
+    parser.add_argument("--system_prompt", type=str, default="", help="system prompt for inference")
+    parser.add_argument("--temperature", type=float, default=0.7, help="temperature for inference")
+    
     parser.add_argument("--test_file", type=str, help="sample file path to evaluate")
+    parser.add_argument("--result_pattern", type=str, default=r'<result>(.*?)</result>', help="regex pattern to extract result from output")
+    parser.add_argument("--output_file", type=str, default="", help="output json file path to save results")
+    parser.add_argument("--api_type", default="chat_completion", choices=["response", "chat-completion"], type=str, help="api type for inference")
+    
+    parser.add_argument("--thinking", action="store_true", help="Whether to enable thinking mode")
     args = parser.parse_args()
     
-    prompt = open(args.prompt_file, 'r').read()
-    outputs = inference(prompt, args.test_file)
+    outputs = inference(args)
     results = calculate_metrics(outputs)
     save_outputs({
         'metrics': results,
         'predicts': outputs,
-    })    
+    }, args.output_file)    
     print(results)
 
 

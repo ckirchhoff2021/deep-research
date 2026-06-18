@@ -1,10 +1,10 @@
 ---
 name: visual-analysis
-description: 视觉图表多模态分析专用技能，支持三大核心能力：1. 对输入的图像/图表进行多模态理解分析，支持开启/关闭thinking模式输出完整推理过程；2. 根据用户提供的prompt和视觉分类评测集，评测prompt在数据集上的分类精度表现；3. 基于评测结果，对prompt给出针对性优化建议，提升分类准确率。当用户要求分析图表/图像、评测视觉分类prompt效果、优化prompt时必须使用本技能，即使没有明确提及视觉分析也要触发。
+description: 视觉多模态分析技能，支持三大核心能力：1. 使用用户提供的模型或者内置模型，对输入的图像进行多模态理解分析，支持开启/关闭thinking模式输出完整推理过程；2. 根据用户提供的分类知识和评测集，评测内置模型或者用户提供的模型在评测集上的表现；3. 根据用户输入的评测集和分类prompt，使用内置模型评测prompt在评测集上的表现。当用户要求分析图像、评估新部署的模型效果，评测视觉分类prompt效果时必须使用本技能。
 ---
 
 # Visual Analysis Skill
-专业的视觉图表多模态分析与评测优化技能，支持完整的分析-评测-优化全链路能力。
+专业的视觉多模态分析与分类效果评测技能，支持完整的分析-评测-优化全链路能力。
 
 ## 核心功能与使用流程
 ### 功能1：图像多模态分析
@@ -12,16 +12,36 @@ description: 视觉图表多模态分析专用技能，支持三大核心能力�
 **使用方法**：
 ```bash
 .venv/bin/python [YOUR_SKILLS_DIR]/visual-analysis/scripts/analyze.py  \
+  --base_url <模型URL> \
+  --api_key <API密钥> \
+  --model_name <模型名称> \
+  --temperature <温度参数> \
   --image_file <输入图像绝对路径> \
-  --prompt <分析指令文本或指令文件路径> \
+  --user_prompt <分析指令文本或指令文件路径> \
+  --system_prompt <系统提示文本> \
+  --api_type <API类型> \
+  --reasoner <推理深度> \
+  [--output-json] \  
   [--thinking] # 可选参数，开启后输出完整推理过程
 ```
-**输出要求**：
-- 未开启thinking模式：直接按照用户指令输出最终分析结论
-- 开启thinking模式：先输出完整推理过程，再输出最终结论
+**参数说明**：
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `{base_url}` | 模型 API 地址 | `https://api.openai.com/v1` |
+| `{api_key}` | 模型API KEY | `Empty` |
+| `{model_name}` | 模型名称 | `Qwen3.5-0.8B` |
+| `{temperature}` | 温度参数 | `0.2` |
+| `{image_file}` | 输入图像绝对路径 | `/home/workspace/offset_236.png` |
+| `{user_prompt}` | 分析指令文本或指令文件路径 | `分析 offset_236.png 这张图表的走势` |
+| `{system_prompt}` | 系统提示文本 | `你是一个专业的视觉分析助手，能够根据图像内容进行分类和分析。` |
+| `{api_type}` | API类型 | `response/chat-completion`，如果是自部署模型，必须使用`chat-completion`类型，内置模型用`response`类型 |
+| `{reasoner}` | 推理深度 | `medium` |
+| `{output_json}` | 是否输出 JSON 格式结果 | `True`，store_true|
+| `{thinking}` | 是否开启 thinking 模式 | `True`, store_true |
 
 **示例**：
-输入：`分析 offset_236.png 这张图表的走势`
+输入：`分析 offset_236.png中红色曲线相比蓝色基准曲线的趋势和异常恢复状态，分析标准参考knowledge.md`
+
 输出：
 ```
 ### 分析结果
@@ -33,17 +53,41 @@ description: 视觉图表多模态分析专用技能，支持三大核心能力�
 #### 分析依据：
 红色Current曲线与蓝色Reference曲线全程无交点完全分离，红色始终位于蓝色上方，符合offset类别特征，末尾水位差无缩小趋势，无恢复迹象。
 ```
-
 ---
 
-### 功能2：Prompt精度评测
-**触发场景**：用户提供prompt和视觉分类评测集，要求评估prompt的分类效果时使用
+### 功能2：Prompt和模型在指定评测集上进行精度评测
+**触发场景**：用户提供prompt和视觉分类评测集，要求评估模型在评测集上的分类效果
 **使用方法**：
 ```bash
 .venv/bin/python [YOUR_SKILLS_DIR]/visual-analysis/scripts/evaluator.py \
+  --base_url <模型URL> \
+  --api_key <API密钥> \
+  --model_name <模型名称> \
+  --system_prompt <系统提示文本> \
+  --user_prompt <分析指令文本或指令文件路径> \
+  --temperature <温度参数> \
+  --api_type <API类型> \
+  --output_file <输出JSON绝对路径> \
   --test_file <评测集JSON绝对路径> \
-  --prompt <待评测prompt文件绝对路径>
+  --result_pattern <从输出文本中抽取结果的正则表达式> \
+  [--thinking] # 可选参数，开启后输出完整推理过程
 ```
+**参数说明**：
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `{base_url}` | 模型 API 地址 | `https://api.openai.com/v1` |
+| `{api_key}` | 模型API KEY | `Empty` |
+| `{model_name}` | 模型名称 | `Qwen3.5-0.8B` |
+| `{temperature}` | 温度参数 | `0.2` |
+| `{user_prompt}` | 分析指令文本或指令文件路径 | `分析 offset_236.png 这张图表的走势` |
+| `{system_prompt}` | 系统提示文本 | `你是一个专业的视觉分析助手，能够根据图像内容进行分类和分析。` |
+| `{api_type}` | API类型 | `response/chat-completion`，如果是自部署模型，必须使用`chat-completion`类型，内置模型用`response`类型|
+| `{thinking}` | 是否开启 thinking 模式 | `True`, store_true |
+| `{result_pattern}` | 从输出文本中抽取结果的正则表达式，一般从user_prompt或者system_prompt中输出各种中提取到 | `<result>(.*?)</result>` |
+| `{test_file}` | 评测集JSON绝对路径 | `/home/workspace/test.json` |
+| `{output_file}` | 输出JSON绝对路径 | `/outputs/evals-20260601112410.json` |
+
+
 **输出要求**：
 必须包含以下内容：
 1. 全局准确率指标
@@ -67,17 +111,18 @@ description: 视觉图表多模态分析专用技能，支持三大核心能力�
 
 ---
 
-### 功能3：Prompt优化建议
-**触发场景**：用户已有评测结果，要求对prompt进行优化提升分类效果时使用
+### 功能3：视觉分类Prompt优化建议
+**触发场景**：用户需要评估指定视觉分类prompt在指定评测集上的分类效果，要求优化prompt以提升分类精度
 **优化流程**：
-1. 读取原始prompt内容和评测结果文件，定位错误case的共性规律
-2. 从以下维度给出优化建议：
-   - 类别优先级判断规则补充
-   - 分类判据边界定义细化
-   - 异常特征排除规则补充
-   - 推理流程校验要求强化
-3. 生成优化后的prompt版本，并给出精度提升预期
-4. 自动运行评测验证优化效果，输出前后精度对比表
+1. 检查上下文是否有评测结果，若没有结果，则使用功能2生成评测结果文件
+2. 审视输入的prompt，从以下维度给出优化建议：
+   - 分类标准是否清晰 
+   - 类别之间的判定是否有冲突
+   - 类别判定优先级是否清晰合理
+   - 从全局判断分类标准是否逻辑严谨
+3. 审视评测结果，定位错误case的共性规律，给出优化建议
+4. 生成优化后的prompt版本，并给出精度提升预期
+5. 使用功能2再次自动运行评测验证优化效果，输出前后精度对比表
 
 **输出要求**：
 必须包含：
@@ -90,4 +135,9 @@ description: 视觉图表多模态分析专用技能，支持三大核心能力�
 
 ## 依赖说明
 - 支持的图像格式：PNG、JPG、JPEG
-- 支持的评测集格式：标准JSON格式，包含图像路径、真实标签、分类标注信息
+- 支持的评测集格式：标准JSON格式，包含图像路径、真实标签、分类标注信息， 格式为：
+```json
+{
+    "{image_path}": "{label}"
+}
+```
