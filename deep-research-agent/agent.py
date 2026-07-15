@@ -224,7 +224,7 @@ def display_agent_process(result, console):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Text-to-SQL Deep Agent powered by LangChain Deep Agents and Claude Sonnet 4.5",
+        description="deep-research agents developed by cx",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
