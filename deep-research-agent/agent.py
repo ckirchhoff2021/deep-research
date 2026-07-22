@@ -256,7 +256,7 @@ Examples:
     )
     console.print()
 
-    console.print("[dim]Creating SQL Deep Agent...[/dim]")
+    console.print("[dim]Creating DeepResearch Agent...[/dim]")
     tracing_config = configure_langsmith()
     if tracing_config["enabled"]:
         project_name = tracing_config["project"] or "default"
